@@ -107,8 +107,6 @@ func (b *Bank) GetTransactionHistory(name string) ([]Transaction, error) {
 }
 
 func ExtractURLParam(r *http.Request) (string, error) {
-	fmt.Println("ExtractURLParam -->",r.URL)
-
 	user := chi.URLParam(r, "user")
 	if user == "" {
 		return "", errors.New("user : user name is empty")
