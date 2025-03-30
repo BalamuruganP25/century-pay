@@ -1,8 +1,12 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 	"time"
+
+	"github.com/go-chi/chi"
 )
 
 // NewBank initializes a Bank with predefined users and balances
@@ -80,4 +84,32 @@ func (b *Bank) AddUser(name string, balance float64) error {
 		Balance: balance,
 	}
 	return nil
+}
+
+// GetTransactionHistory returns the transaction history for a specific user
+func (b *Bank) GetTransactionHistory(name string) ([]Transaction, error) {
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+
+	// Fetch all transactions for the given user
+	var userTransactions []Transaction
+	for _, transaction := range b.transactions {
+		if transaction.Sender == name || transaction.Receiver == name {
+			userTransactions = append(userTransactions, transaction)
+		}
+	}
+
+	if len(userTransactions) == 0 {
+		return nil, fmt.Errorf("no transactions found for user '%s'", name)
+	}
+
+	return userTransactions, nil
+}
+
+func ExtractURLParam(r *http.Request) (string, error) {
+	user := chi.URLParam(r, "user")
+	if user == "" {
+		return "", errors.New("user : user name is empty")
+	}
+	return user, nil
 }
