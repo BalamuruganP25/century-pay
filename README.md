@@ -1,2 +1,2 @@
-# century-pay-
+# century-pay
 assignment
