@@ -106,6 +106,19 @@ func (b *Bank) GetTransactionHistory(name string) ([]Transaction, error) {
 	return userTransactions, nil
 }
 
+// GetBalance retrieves the balance of a user
+func (b *Bank) GetBalance(name string) (float64, error) {
+	b.mu.RLock() // Use read lock since we are only reading data
+	defer b.mu.RUnlock()
+
+	user, exists := b.users[name]
+	if !exists {
+		return 0, errors.New(fmt.Sprintf("user '%s' not found", name))
+	}
+
+	return user.Balance, nil
+}
+
 func ExtractURLParam(r *http.Request) (string, error) {
 	user := chi.URLParam(r, "user")
 	if user == "" {
