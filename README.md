@@ -72,34 +72,6 @@ A simple RESTful API for basic banking operations like transferring money, check
 
 ## Setup and Run
 
-### Prerequisites
-
--   Go 1.18 or higher
-
-### Steps to Run the Server
-
-1.  **Clone the repository:**
-
-    ```bash
-    git clone [https://github.com/yourusername/century-pay.git](https://github.com/yourusername/century-pay.git)
-    cd century-pay
-    ```
-
-2.  **Install dependencies:**
-
-    ```bash
-    go get [github.com/go-chi/chi](https://github.com/go-chi/chi)
-    go get [github.com/go-chi/chi/middleware](https://www.google.com/search?q=https://github.com/go-chi/chi/middleware)
-    ```
-
-3.  **Run the server:**
-
-    ```bash
-    go run server.go
-    ```
-
-    The server will be running on `http://localhost:8080`.
-
 ## Using the Makefile
 
 The `Makefile` helps automate Docker operations and Go dependency management. You can use the following commands:
