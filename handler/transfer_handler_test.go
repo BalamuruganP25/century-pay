@@ -35,7 +35,7 @@ func TestTransferHandlerSuccess(t *testing.T) {
 			reqBody: handler.TransferRequest{
 				Sender:   "Mark",
 				Receiver: "Jane",
-				Amount:   200, // More than Mark's balance
+				Amount:   200,
 			},
 			expectedStatus: http.StatusBadRequest,
 		},
@@ -61,7 +61,7 @@ func TestTransferHandlerSuccess(t *testing.T) {
 			name: "Transfer to Same User",
 			reqBody: handler.TransferRequest{
 				Sender:   "Mark",
-				Receiver: "Mark", // Cannot transfer to yourself
+				Receiver: "Mark",
 				Amount:   10,
 			},
 			expectedStatus: http.StatusBadRequest,
@@ -75,13 +75,8 @@ func TestTransferHandlerSuccess(t *testing.T) {
 			if err != nil {
 				t.Fatalf("failed to marshal request body: %v", err)
 			}
-
-			// Create a new HTTP request
 			req := httptest.NewRequest(http.MethodPost, "/transfer", bytes.NewReader(reqBody))
 			w := httptest.NewRecorder()
-
-			// Call the TransferMoney handler
-			// Notice we pass the bank instance here
 			handler := handler.TransferMoney(bank)
 			handler(w, req)
 

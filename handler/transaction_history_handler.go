@@ -27,11 +27,9 @@ func GetTransacationHistory(s *Bank) http.HandlerFunc {
 			return
 		}
 
-		// Return the transaction history as JSON
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		// Encode the transactions slice as JSON
 		err = json.NewEncoder(w).Encode(transactions)
 		if err != nil {
 			http.Error(w, "Error encoding response", http.StatusInternalServerError)
