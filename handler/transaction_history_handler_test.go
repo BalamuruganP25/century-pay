@@ -13,11 +13,11 @@ import (
 func TestGetTransactionHistoryHandler(t *testing.T) {
 	// Set up bank instance and users
 	bank := handler.NewBank()
-	_ = bank.AddUser("Mark", 100) // Add Mark with an initial balance of $100
-	_ = bank.AddUser("Jane", 50)  // Add Jane with an initial balance of $50
+	_ = bank.AddUser("Mark", 100)
+	_ = bank.AddUser("Jane", 50)
 
 	// Perform transfers to generate transaction history
-	_ = bank.TransferMoney("Mark", "Jane", 30) // Mark transfers $30 to Jane
+	_ = bank.TransferMoney("Mark", "Jane", 30)
 
 	tests := []struct {
 		name           string
@@ -51,14 +51,8 @@ func TestGetTransactionHistoryHandler(t *testing.T) {
 
 			r := chi.NewRouter()
 			r.Get("/v1/transaction/{user}/transaction_history", handler.GetTransacationHistory(bank))
-
-			// Create a new test request for the path '/v1/transaction/Mark/transaction_history'
 			req := httptest.NewRequest("GET", fmt.Sprintf("/v1/transaction/%s/transaction_history", tt.user), nil)
-
-			// Create a response recorder to capture the response
 			rr := httptest.NewRecorder()
-
-			// Serve the request using the router
 			r.ServeHTTP(rr, req)
 
 			// Check the response status code

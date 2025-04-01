@@ -13,8 +13,8 @@ import (
 func TestBalanceHandler(t *testing.T) {
 	// Set up bank instance and users
 	bank := handler.NewBank()
-	_ = bank.AddUser("Mark", 100) // Add Mark with an initial balance of $100
-	_ = bank.AddUser("Jane", 50)  // Add Jane with an initial balance of $50
+	_ = bank.AddUser("Mark", 100)
+	_ = bank.AddUser("Jane", 50)
 
 	tests := []struct {
 		name           string
@@ -24,46 +24,39 @@ func TestBalanceHandler(t *testing.T) {
 	}{
 		{
 			name:           "Get Mark's balance",
-			user:           "Mark", // User 'Mark' in the URL
+			user:           "Mark",
 			expectedStatus: http.StatusOK,
 		},
 		{
 			name:           "Get Jane's balance",
-			user:           "Jane", // User 'Jane' in the URL
+			user:           "Jane",
 			expectedStatus: http.StatusOK,
 		},
 		{
 			name:           "User not found",
-			user:           "NonExistent", // Non-existent user in the URL
+			user:           "NonExistent",
 			expectedStatus: http.StatusNotFound,
 		},
 		{
 			name:           "No user provided",
-			user:           "", // Empty user in the URL
+			user:           "",
 			expectedStatus: http.StatusBadRequest,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-	
+
 			r := chi.NewRouter()
 			r.Get("/v1/transaction/{user}/balance", handler.GetUserBalance(bank))
-
-			// Create a new test request for the path '/v1/transaction/Mark/transaction_history'
 			req := httptest.NewRequest("GET", fmt.Sprintf("/v1/transaction/%s/balance", tt.user), nil)
-
-			// Create a response recorder to capture the response
 			rr := httptest.NewRecorder()
-
-			// Serve the request using the router
 			r.ServeHTTP(rr, req)
 
 			// Check the response status code
 			if rr.Code != tt.expectedStatus {
 				t.Errorf("expected status %v, got %v", tt.expectedStatus, rr.Code)
 			}
-		
 
 		})
 	}

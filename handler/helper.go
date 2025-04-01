@@ -23,7 +23,7 @@ func NewBank() *Bank {
 
 func (b *Bank) TransferMoney(sender, receiver string, amount float64) error {
 
-	b.mu.Lock() // Lock the bank to modify user accounts (write lock)
+	b.mu.Lock()
 	defer b.mu.Unlock()
 
 	// Check if both users exist
@@ -42,7 +42,6 @@ func (b *Bank) TransferMoney(sender, receiver string, amount float64) error {
 		return fmt.Errorf("cannot transfer money to yourself")
 	}
 
-	// Lock sender and receiver to prevent race conditions during the transfer
 	senderUser.mu.Lock()
 	receiverUser.mu.Lock()
 	defer senderUser.mu.Unlock()
@@ -56,7 +55,6 @@ func (b *Bank) TransferMoney(sender, receiver string, amount float64) error {
 	senderUser.Balance -= amount
 	receiverUser.Balance += amount
 
-	// Log the transaction
 	b.transactions = append(b.transactions, Transaction{
 		Sender:    sender,
 		Receiver:  receiver,
@@ -91,7 +89,6 @@ func (b *Bank) GetTransactionHistory(name string) ([]Transaction, error) {
 	b.mu.RLock()
 	defer b.mu.RUnlock()
 
-	// Fetch all transactions for the given user
 	var userTransactions []Transaction
 	for _, transaction := range b.transactions {
 		if transaction.Sender == name || transaction.Receiver == name {
@@ -108,7 +105,7 @@ func (b *Bank) GetTransactionHistory(name string) ([]Transaction, error) {
 
 // GetBalance retrieves the balance of a user
 func (b *Bank) GetBalance(name string) (float64, error) {
-	b.mu.RLock() // Use read lock since we are only reading data
+	b.mu.RLock()
 	defer b.mu.RUnlock()
 
 	user, exists := b.users[name]
