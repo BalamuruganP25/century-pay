@@ -13,11 +13,11 @@ import (
 func TestGetTransactionHistoryHandler(t *testing.T) {
 	// Set up bank instance and users
 	bank := handler.NewBank()
-	_ = bank.AddUser("Mark", 100)
-	_ = bank.AddUser("Jane", 50)
+	_ = bank.AddUser("Mark", 100) // Add Mark with an initial balance of $100
+	_ = bank.AddUser("Jane", 50)  // Add Jane with an initial balance of $50
 
 	// Perform transfers to generate transaction history
-	_ = bank.TransferMoney("Mark", "Jane", 30)
+	_ = bank.TransferMoney("Mark", "Jane", 30) // Mark transfers $30 to Jane
 
 	tests := []struct {
 		name           string

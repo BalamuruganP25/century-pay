@@ -13,8 +13,8 @@ import (
 func TestBalanceHandler(t *testing.T) {
 	// Set up bank instance and users
 	bank := handler.NewBank()
-	_ = bank.AddUser("Mark", 100)
-	_ = bank.AddUser("Jane", 50)
+	_ = bank.AddUser("Mark", 100) // Add Mark with an initial balance of $100
+	_ = bank.AddUser("Jane", 50) // Add Jane with an initial balance of $50
 
 	tests := []struct {
 		name           string
