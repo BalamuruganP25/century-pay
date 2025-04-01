@@ -15,6 +15,11 @@ func GetTransacationHistory(s *Bank) http.HandlerFunc {
 			return
 		}
 
+		if _, ok := s.users[user]; !ok {
+			http.Error(w, "user not found", http.StatusNotFound)
+			return
+		}
+
 		// Fetch the transaction history for the user
 		transactions, err := s.GetTransactionHistory(user)
 		if err != nil {

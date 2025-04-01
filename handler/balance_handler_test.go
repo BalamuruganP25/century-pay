@@ -10,50 +10,48 @@ import (
 	"github.com/go-chi/chi"
 )
 
-func TestGetTransactionHistoryHandler(t *testing.T) {
+func TestBalanceHandler(t *testing.T) {
 	// Set up bank instance and users
 	bank := handler.NewBank()
 	_ = bank.AddUser("Mark", 100) // Add Mark with an initial balance of $100
 	_ = bank.AddUser("Jane", 50)  // Add Jane with an initial balance of $50
 
-	// Perform transfers to generate transaction history
-	_ = bank.TransferMoney("Mark", "Jane", 30) // Mark transfers $30 to Jane
-
 	tests := []struct {
 		name           string
 		user           string
 		expectedStatus int
+		expectedBody   string
 	}{
 		{
-			name:           "Get Mark's transaction history",
-			user:           "Mark",
+			name:           "Get Mark's balance",
+			user:           "Mark", // User 'Mark' in the URL
 			expectedStatus: http.StatusOK,
 		},
 		{
-			name:           "Get Jane's transaction history",
-			user:           "Jane",
+			name:           "Get Jane's balance",
+			user:           "Jane", // User 'Jane' in the URL
 			expectedStatus: http.StatusOK,
 		},
 		{
 			name:           "User not found",
-			user:           "NonExistent",
+			user:           "NonExistent", // Non-existent user in the URL
 			expectedStatus: http.StatusNotFound,
 		},
 		{
 			name:           "No user provided",
-			user:           "",
+			user:           "", // Empty user in the URL
 			expectedStatus: http.StatusBadRequest,
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
+	
 			r := chi.NewRouter()
-			r.Get("/v1/transaction/{user}/transaction_history", handler.GetTransacationHistory(bank))
+			r.Get("/v1/transaction/{user}/balance", handler.GetUserBalance(bank))
 
 			// Create a new test request for the path '/v1/transaction/Mark/transaction_history'
-			req := httptest.NewRequest("GET", fmt.Sprintf("/v1/transaction/%s/transaction_history", tt.user), nil)
+			req := httptest.NewRequest("GET", fmt.Sprintf("/v1/transaction/%s/balance", tt.user), nil)
 
 			// Create a response recorder to capture the response
 			rr := httptest.NewRecorder()
@@ -65,6 +63,7 @@ func TestGetTransactionHistoryHandler(t *testing.T) {
 			if rr.Code != tt.expectedStatus {
 				t.Errorf("expected status %v, got %v", tt.expectedStatus, rr.Code)
 			}
+		
 
 		})
 	}
