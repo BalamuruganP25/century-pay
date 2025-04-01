@@ -7,5 +7,5 @@ RUN go mod download
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o app /go/src/cmd/century-pay
 RUN cp app /app
-EXPOSE 8089
+EXPOSE 8080
 CMD ["/app"]
